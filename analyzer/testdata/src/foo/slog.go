@@ -3,8 +3,11 @@ package foo
 import "log/slog"
 
 func testSlog() {
-	slog.Info("starting server")    // want `found log message: "starting server"`
-	slog.Error("failed to connect") // want `found log message: "failed to connect"`
-	slog.Warn("something happened") // want `found log message: "something happened"`
-	slog.Debug("debug message")     // want `found log message: "debug message"`
+	slog.Info("starting server")
+	slog.Error("failed to connect")
+	slog.Warn("something happened")
+	slog.Debug("debug message")
+
+	slog.Info("Starting server")    // want "log message must start with a lowercase letter"
+	slog.Error("Failed to connect") // want "log message must start with a lowercase letter"
 }

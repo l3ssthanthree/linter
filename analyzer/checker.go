@@ -3,6 +3,7 @@ package analyzer
 import (
 	"go/ast"
 	"mylinter/internal/logs"
+	"mylinter/rules"
 
 	"golang.org/x/tools/go/analysis"
 )
@@ -25,7 +26,9 @@ func run(pass *analysis.Pass) (any, error) {
 				return true
 			}
 
-			pass.Reportf(msgExpr.Pos(), "found log message: %q", msg)
+			if !rules.StartsWithLowercase(msg) {
+				pass.Reportf(msgExpr.Pos(), "log message must start with a lowercase letter")
+			}
 			_ = msg
 
 			return true
