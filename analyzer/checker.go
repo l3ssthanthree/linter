@@ -34,6 +34,10 @@ func run(pass *analysis.Pass) (any, error) {
 				pass.Reportf(msgExpr.Pos(), "log message must contain only English text")
 			}
 
+			if rules.HasForbiddenSymbols(msg) {
+				pass.Reportf(msgExpr.Pos(), "log message must not contain special symbols or emoji")
+			}
+
 			return true
 		})
 	}

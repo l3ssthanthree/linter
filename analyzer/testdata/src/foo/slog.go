@@ -14,4 +14,9 @@ func testSlog() {
 	slog.Info("запуск сервера")      // want "log message must contain only English text"
 	slog.Error("ошибка подключения") // want "log message must contain only English text"
 	slog.Warn("server запущен")      // want "log message must contain only English text"
+
+	slog.Info("server started!")         // want "log message must not contain special symbols or emoji"
+	slog.Error("connection failed???")   // want "log message must not contain special symbols or emoji"
+	slog.Warn("something went wrong...") // want "log message must not contain special symbols or emoji"
+	slog.Debug("server started 🚀")       // want "log message must not contain special symbols or emoji"
 }
