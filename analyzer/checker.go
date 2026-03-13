@@ -29,7 +29,10 @@ func run(pass *analysis.Pass) (any, error) {
 			if !rules.StartsWithLowercase(msg) {
 				pass.Reportf(msgExpr.Pos(), "log message must start with a lowercase letter")
 			}
-			_ = msg
+
+			if !rules.IsEnglishOnly(msg) {
+				pass.Reportf(msgExpr.Pos(), "log message must contain only English text")
+			}
 
 			return true
 		})
