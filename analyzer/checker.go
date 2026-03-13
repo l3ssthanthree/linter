@@ -16,7 +16,7 @@ func run(pass *analysis.Pass) (any, error) {
 				return true
 			}
 
-			msgExpr, ok := logs.ExtractMessage(call)
+			msgExpr, ok := logs.ExtractMessage(pass, call)
 			if !ok {
 				return true
 			}

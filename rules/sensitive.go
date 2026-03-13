@@ -4,16 +4,16 @@ import (
 	"regexp"
 )
 
-var sensitiveKeyWordsPatterns = []*regexp.Regexp{
+var sensitiveKeywordPatterns = []*regexp.Regexp{
 
 	regexp.MustCompile(`(?i)\bpassword\b`), // password
 	regexp.MustCompile(`(?i)\bpasswd\b`),   //passwd
 	regexp.MustCompile(`(?i)\bpwd\b`),      // pwd
 
-	regexp.MustCompile(`(?i)\token\b`),        // token
-	regexp.MustCompile(`(?i)\bapi[_-]?key\b`), // api_key, api-key, apikey
+	regexp.MustCompile(`(?i)\btoken\b`),              // token
+	regexp.MustCompile(`(?i)\bapi(?:[_\-\s]?key)\b`), // api_key, api-key, apikey, api key
 
-	regexp.MustCompile(`(?i)\secret\b`), // secret
+	regexp.MustCompile(`(?i)\bsecret\b`), // secret
 
 	regexp.MustCompile(`(?i)\bcredential(s)?\b`), // credential, credentials
 }
@@ -30,7 +30,7 @@ var sensitiveAssignmentPatterns = []*regexp.Regexp{
 
 	regexp.MustCompile(`(?i)\btoken\b\s*[:=]`),
 
-	regexp.MustCompile(`(?i)\bapi[_-]?key\b\s*[:=]`),
+	regexp.MustCompile(`(?i)\bapi(?:[_\-\s]?key)\b\s*[:=]`),
 
 	regexp.MustCompile(`(?i)\bsecret\b\s*[:=]`),
 
@@ -42,11 +42,11 @@ func HasSensitiveKeyword(s string) bool {
 		if pattern.MatchString(s) {
 			return true
 		}
+	}
 
-		for _, pattern := range sensitiveKeyWordsPatterns {
-			if pattern.MatchString(s) {
-				return true
-			}
+	for _, pattern := range sensitiveKeywordPatterns {
+		if pattern.MatchString(s) {
+			return true
 		}
 	}
 
