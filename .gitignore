@@ -1,0 +1,17 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+*.test
+*.out
+coverage.out
+
+/vendor/
+
+.idea/
+.vscode/
+
+.DS_Store
+Thumbs.db
