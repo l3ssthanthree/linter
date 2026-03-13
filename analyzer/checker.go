@@ -21,21 +21,28 @@ func run(pass *analysis.Pass) (any, error) {
 				return true
 			}
 
-			msg, ok := logs.StringLiteral(msgExpr)
-			if !ok {
-				return true
+			if msg, ok := logs.StringLiteral(msgExpr); ok {
+				if !rules.StartsWithLowercase(msg) {
+					pass.Reportf(msgExpr.Pos(), "log message must start with a lowercase letter")
+				}
+
+				if !rules.IsEnglishOnly(msg) {
+					pass.Reportf(msgExpr.Pos(), "log message must contain only English text")
+				}
+
+				if rules.HasForbiddenSymbols(msg) {
+					pass.Reportf(msgExpr.Pos(), "log message must not contain special symbols or emoji")
+				}
+
+				if rules.HasSensitiveKeyword(msg) {
+					pass.Reportf(msgExpr.Pos(), "log message may contain sensitive data")
+				}
 			}
 
-			if !rules.StartsWithLowercase(msg) {
-				pass.Reportf(msgExpr.Pos(), "log message must start with a lowercase letter")
-			}
-
-			if !rules.IsEnglishOnly(msg) {
-				pass.Reportf(msgExpr.Pos(), "log message must contain only English text")
-			}
-
-			if rules.HasForbiddenSymbols(msg) {
-				pass.Reportf(msgExpr.Pos(), "log message must not contain special symbols or emoji")
+			for _, s := range logs.CollectStringLiterals(msgExpr) {
+				if rules.HasSensitiveKeyword(s) {
+					pass.Reportf(msgExpr.Pos(), "log message may contain sensitive data")
+				}
 			}
 
 			return true

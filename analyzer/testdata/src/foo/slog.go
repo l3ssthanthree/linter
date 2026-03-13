@@ -1,6 +1,9 @@
 package foo
 
-import "log/slog"
+import (
+	"fmt"
+	"log/slog"
+)
 
 func testSlog() {
 	slog.Info("starting server")
@@ -19,4 +22,13 @@ func testSlog() {
 	slog.Error("connection failed???")   // want "log message must not contain special symbols or emoji"
 	slog.Warn("something went wrong...") // want "log message must not contain special symbols or emoji"
 	slog.Debug("server started 🚀")       // want "log message must not contain special symbols or emoji"
+
+	password := "secret"
+	token := "abc"
+	apiKey := "key"
+
+	slog.Info("password: " + password)               // want "log message may contain sensitive data"
+	slog.Debug("token: " + token)                    // want "log message may contain sensitive data"
+	slog.Warn("api_key=" + apiKey)                   // want "log message may contain sensitive data"
+	slog.Info(fmt.Sprintf("password: %s", password)) // want "log message may contain sensitive data"
 }

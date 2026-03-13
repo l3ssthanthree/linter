@@ -23,3 +23,32 @@ func StringLiteral(expr ast.Expr) (string, bool) {
 
 	return s, true
 }
+
+func CollectStringLiterals(expr ast.Expr) []string {
+	var result []string
+
+	var walk func(ast.Expr)
+
+	walk = func(e ast.Expr) {
+		switch v := e.(type) {
+
+		case *ast.BasicLit:
+			if s, ok := StringLiteral(v); ok {
+				result = append(result, s)
+			}
+
+		case *ast.BinaryExpr:
+			walk(v.X)
+			walk(v.Y)
+
+		case *ast.CallExpr:
+			for _, arg := range v.Args {
+				walk(arg)
+			}
+		}
+	}
+
+	walk(expr)
+
+	return result
+}
