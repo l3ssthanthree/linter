@@ -3,6 +3,13 @@ package main
 import "log/slog"
 
 func main() {
+
 	slog.Info("starting server")
-	slog.Error("failed to connect")
+
+	slog.Info("Starting server")
+
+	slog.Info("server started!!!")
+
+	password := "secret"
+	slog.Info("password: " + password)
 }
