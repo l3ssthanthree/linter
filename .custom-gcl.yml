@@ -1,5 +1,6 @@
 version: v2.11.3
 
 plugins:
-  - module: .
+  - module: mylinter
     import: mylinter/plugin
+    path: .
