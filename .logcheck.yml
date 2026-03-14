@@ -1,0 +1,4 @@
+extra_sensitive_patterns:
+  - (?i)\bsession_id\b
+  - (?i)\bprivate_key\b
+  - (?i)\brefresh_token\b

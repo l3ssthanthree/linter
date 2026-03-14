@@ -37,6 +37,23 @@ var sensitiveAssignmentPatterns = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)\bcredential(s)?\b\s*[:=]`),
 }
 
+var customSensitivePatterns []*regexp.Regexp
+
+func SetCustomSensitivePatterns(patterns []string) error {
+	compiled := make([]*regexp.Regexp, 0, len(patterns))
+
+	for _, pattern := range patterns {
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			return err
+		}
+		compiled = append(compiled, re)
+	}
+
+	customSensitivePatterns = compiled
+	return nil
+}
+
 func HasSensitiveKeyword(s string) bool {
 	for _, pattern := range sensitiveAssignmentPatterns {
 		if pattern.MatchString(s) {
@@ -45,6 +62,12 @@ func HasSensitiveKeyword(s string) bool {
 	}
 
 	for _, pattern := range sensitiveKeywordPatterns {
+		if pattern.MatchString(s) {
+			return true
+		}
+	}
+
+	for _, pattern := range customSensitivePatterns {
 		if pattern.MatchString(s) {
 			return true
 		}

@@ -9,6 +9,15 @@ import (
 )
 
 func run(pass *analysis.Pass) (any, error) {
+	cfg, err := loadConfig(configPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rules.SetCustomSensitivePatterns(cfg.ExtraSensitivePatterns); err != nil {
+		return nil, err
+	}
+
 	for _, file := range pass.Files {
 		ast.Inspect(file, func(n ast.Node) bool {
 			call, ok := n.(*ast.CallExpr)
