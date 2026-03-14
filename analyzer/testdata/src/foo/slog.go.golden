@@ -1,0 +1,34 @@
+package foo
+
+import (
+	"fmt"
+	"log/slog"
+)
+
+func testSlog() {
+	slog.Info("starting server")
+	slog.Error("failed to connect")
+	slog.Warn("something happened")
+	slog.Debug("debug message")
+
+	slog.Info("starting server")    // want "log message must start with a lowercase letter"
+	slog.Error("failed to connect") // want "log message must start with a lowercase letter"
+
+	slog.Info("запуск сервера")      // want "log message must contain only English text"
+	slog.Error("ошибка подключения") // want "log message must contain only English text"
+	slog.Warn("server запущен")      // want "log message must contain only English text"
+
+	slog.Info("server started!")         // want "log message must not contain special symbols or emoji"
+	slog.Error("connection failed???")   // want "log message must not contain special symbols or emoji"
+	slog.Warn("something went wrong...") // want "log message must not contain special symbols or emoji"
+	slog.Debug("server started 🚀")      // want "log message must not contain special symbols or emoji"
+
+	password := "secret"
+	token := "abc"
+	apiKey := "key"
+
+	slog.Info("password: " + password)               // want "log message may contain sensitive data"
+	slog.Debug("token: " + token)                    // want "log message may contain sensitive data"
+	slog.Warn("api_key=" + apiKey)                   // want "log message may contain sensitive data"
+	slog.Info(fmt.Sprintf("password: %s", password)) // want "log message may contain sensitive data"
+}

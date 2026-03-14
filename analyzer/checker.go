@@ -23,7 +23,27 @@ func run(pass *analysis.Pass) (any, error) {
 
 			if msg, ok := logs.StringLiteral(msgExpr); ok {
 				if !rules.StartsWithLowercase(msg) {
-					pass.Reportf(msgExpr.Pos(), "log message must start with a lowercase letter")
+					if newText, ok := logs.LowercaseSuggestedText(msgExpr); ok {
+						pass.Report(analysis.Diagnostic{
+							Pos:     msgExpr.Pos(),
+							End:     msgExpr.End(),
+							Message: "log message must start with a lowercase letter",
+							SuggestedFixes: []analysis.SuggestedFix{
+								{
+									Message: "convert first letter to lowercase",
+									TextEdits: []analysis.TextEdit{
+										{
+											Pos:     msgExpr.Pos(),
+											End:     msgExpr.End(),
+											NewText: newText,
+										},
+									},
+								},
+							},
+						})
+					} else {
+						pass.Reportf(msgExpr.Pos(), "log message must start with a lowercase letter")
+					}
 				}
 
 				if !rules.IsEnglishOnly(msg) {
